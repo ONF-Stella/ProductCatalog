@@ -20,13 +20,6 @@ namespace ProductCatalog.Web.Infrastructure
             return await _db.QueryAsync<Product>(sql, new { search = $"%{search}%" });
         }
 
-        public async Task<IEnumerable<Product>> SearchAsync(string search, string test)
-        {
-            var sql = @"SELECT * FROM Products
-                WHERE (Name LIKE @search OR Description LIKE @search) and Price > 100";
-            return await _db.QueryAsync<Product>(sql, new { search = $"%{search}%" });
-        }
-
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
             var sql = "SELECT * FROM Products";

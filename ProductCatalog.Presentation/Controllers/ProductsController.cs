@@ -18,7 +18,7 @@ namespace ProductCatalog.Web.Controllers
         {
             var products = string.IsNullOrWhiteSpace(searchString)
                 ? await _repo.GetAllAsync()
-                : await _repo.SearchAsync(searchString, "100");
+                : await _repo.SearchAsync(searchString);
 
             ViewData["CurrentFilter"] = searchString;
             return View(products);
