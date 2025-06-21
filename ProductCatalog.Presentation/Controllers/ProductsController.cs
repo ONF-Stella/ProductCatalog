@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProductCatalog.Web.Infrastructure;
 using ProductCatalog.Web.Models;
+using ProductCatalog.Web.Infrastructure;
+using System.Diagnostics;
 
 namespace ProductCatalog.Web.Controllers
 {
@@ -39,10 +40,17 @@ namespace ProductCatalog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
-            if (!ModelState.IsValid) return View(product);
-            product.CreatedAt = DateTime.Now;
-            await _repo.CreateAsync(product);
-            return RedirectToAction(nameof(Index));
+            try { 
+                if (!ModelState.IsValid) return View(product);
+                product.CreatedAt = DateTime.UtcNow;
+                var id = await _repo.CreateAsync(product);
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return View(product);
+            }
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -75,6 +83,16 @@ namespace ProductCatalog.Web.Controllers
         {
             await _repo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(string? message = null)
+        {
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                ErrorMessage = message
+            });
         }
     }
 }

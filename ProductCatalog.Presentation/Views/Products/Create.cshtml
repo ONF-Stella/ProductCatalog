@@ -4,6 +4,19 @@
     ViewData["Title"] = "Create Product";
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <input type="hidden" id="errorMessage" value="@TempData["ErrorMessage"]" />
+}
+<script>
+    window.onload = function () {
+        var errorMessage = document.getElementById("errorMessage");
+        if (errorMessage && errorMessage.value) {
+            alert(errorMessage.value);
+        }
+    };
+</script>
+
 <h1>Create Product</h1>
 
 <form asp-action="Create" method="post">
