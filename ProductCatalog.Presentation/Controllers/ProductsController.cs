@@ -42,7 +42,7 @@ namespace ProductCatalog.Web.Controllers
         {
             try { 
                 if (!ModelState.IsValid) return View(product);
-                product.CreatedAt = DateTime.UtcNow;
+                product.CreatedAt = DateTime.Now;
                 var id = await _repo.CreateAsync(product);
                 return RedirectToAction(nameof(Details), new { id });
             }
